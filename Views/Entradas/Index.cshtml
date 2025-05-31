@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ExpenseTracker.Models.Entrada>
+
+@{
+    ViewData["Title"] = "Entradas";
+}
+
+<h2>Listado de Entradas</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Registrar Nueva Entrada</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entrada in Model)
+        {
+            <tr>
+                <td>@entrada.Monto.ToString("C")</td>
+                <td>@entrada.Fecha.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@entrada.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@entrada.Id" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@entrada.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

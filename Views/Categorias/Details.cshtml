@@ -1,0 +1,30 @@
+﻿@model ExpenseTracker.Models.Categoria
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h2>Detalles</h2>
+
+<div class="mb-3">
+    <label class="fw-bold">Título:</label>
+    <div>@Model.Titulo</div>
+</div>
+
+<div class="mb-3">
+    <label class="fw-bold">Descripción:</label>
+    <div>@Model.Descripcion</div>
+</div>
+
+<div class="mb-3">
+    <label class="fw-bold">Porcentaje Máximo:</label>
+    <div>@Model.PorcentajeMaximo %</div>
+</div>
+
+<div class="mb-3">
+    <label class="fw-bold">Eliminada:</label>
+    <div>@Model.Eliminada</div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

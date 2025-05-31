@@ -1,0 +1,39 @@
+﻿@model ExpenseTracker.Models.Categoria
+
+@{
+    ViewData["Title"] = "Crear Categoría";
+}
+
+<h2>Crear Categoría</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Titulo" class="form-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Descripcion" class="form-label"></label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+        <span asp-validation-for="Descripcion" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="PorcentajeMaximo" class="form-label"></label>
+        <input asp-for="PorcentajeMaximo" class="form-control" />
+        <span asp-validation-for="PorcentajeMaximo" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="Eliminada" class="form-check-input" />
+        <label asp-for="Eliminada" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

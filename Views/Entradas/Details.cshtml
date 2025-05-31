@@ -1,0 +1,20 @@
+﻿@model ExpenseTracker.Models.Entrada
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h2>Detalles de Entrada</h2>
+
+<div class="mb-3">
+    <label class="fw-bold">Monto:</label>
+    <div>@Model.Monto.ToString("C")</div>
+</div>
+
+<div class="mb-3">
+    <label class="fw-bold">Fecha:</label>
+    <div>@Model.Fecha.ToString("dd/MM/yyyy")</div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

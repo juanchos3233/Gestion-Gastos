@@ -1,0 +1,22 @@
+﻿@model ExpenseTracker.Models.Entrada
+@{
+    ViewData["Title"] = "Eliminar Entrada";
+}
+
+<h2 class="mb-4 text-danger">¿Deseas eliminar esta entrada?</h2>
+
+<div class="mb-3">
+    <dl class="row">
+        <dt class="col-sm-3">Monto</dt>
+        <dd class="col-sm-9">@Model.Monto.ToString("C")</dd>
+
+        <dt class="col-sm-3">Fecha</dt>
+        <dd class="col-sm-9">@Model.Fecha.ToShortDateString()</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ExpenseTracker.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Listado de Categorías";
+}
+
+<h2>Categorías</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Crear Nueva Categoría</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Porcentaje</th>
+            <th>Eliminada</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Titulo</td>
+                <td>@item.Descripcion</td>
+                <td>@item.PorcentajeMaximo %</td>
+                <td>@(item.Eliminada ? "Sí" : "No")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detalles</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

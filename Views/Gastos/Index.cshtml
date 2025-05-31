@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ExpenseTracker.Models.Gasto>
+@{
+    ViewData["Title"] = "Listado de Gastos";
+    var filtro = ViewBag.Filtro as string ?? "total";
+}
+
+<h2>Listado de Gastos</h2>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <label>Filtrar por:</label>
+    <select name="filtro" class="form-select w-auto d-inline">
+        <option value="total" selected="@("total" == filtro)">Total</option>
+        <option value="mensual" selected="@("mensual" == filtro)">Mensual</option>
+        <option value="semanal" selected="@("semanal" == filtro)">Semanal</option>
+        <option value="diario" selected="@("diario" == filtro)">Diario</option>
+    </select>
+    <button type="submit" class="btn btn-outline-primary ms-2">Aplicar</button>
+</form>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Registrar Nuevo Gasto</a>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Categoría</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gasto in Model)
+            {
+                <tr>
+                    <td>@gasto.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@gasto.Categoria.Titulo</td>
+                    <td>@gasto.Monto.ToString("C")</td>
+                    <td>@gasto.Descripcion</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@gasto.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <a asp-action="Details" asp-route-id="@gasto.Id" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@gasto.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No hay gastos registrados.</p>
+}

@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Reporte por Categoría";
+    var categorias = ViewBag.Categorias as List<string>;
+    var totales = ViewBag.Totales as List<decimal>;
+    var filtro = ViewBag.Filtro as string ?? "total";
+}
+
+<h2>Reporte de Gastos por Categoría</h2>
+
+<form asp-action="ReportePorCategoria" method="get" class="mb-4">
+    <label>Filtrar por:</label>
+    <select name="filtro" class="form-select w-auto d-inline">
+        <option value="total" selected="@("total" == filtro)">Total</option>
+        <option value="mensual" selected="@("mensual" == filtro)">Mensual</option>
+        <option value="semanal" selected="@("semanal" == filtro)">Semanal</option>
+        <option value="diario" selected="@("diario" == filtro)">Diario</option>
+    </select>
+    <button type="submit" class="btn btn-outline-primary ms-2">Aplicar</button>
+</form>
+
+@if (categorias != null && categorias.Any())
+{
+    <canvas id="chartGastos" width="400" height="200"></canvas>
+
+    <script>
+        const ctx = document.getElementById('chartGastos').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(categorias)),
+                datasets: [{
+                    label: 'Gastos por Categoría',
+                    data: @Html.Raw(Json.Serialize(totales)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <p class="text-muted">No hay datos para mostrar.</p>
+}
