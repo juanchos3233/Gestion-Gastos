@@ -1,4 +1,11 @@
-﻿@model IEnumerable<ExpenseTracker.Models.Gasto>
+﻿@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@model IEnumerable<ExpenseTracker.Models.Gasto>
 @{
     ViewData["Title"] = "Listado de Gastos";
     var filtro = ViewBag.Filtro as string ?? "total";
@@ -36,7 +43,7 @@
             {
                 <tr>
                     <td>@gasto.Fecha.ToString("dd/MM/yyyy")</td>
-                    <td>@gasto.Categoria.Titulo</td>
+                    <td>@(gasto.Categoria?.Titulo ?? "Sin categoría")</td>
                     <td>@gasto.Monto.ToString("C")</td>
                     <td>@gasto.Descripcion</td>
                     <td>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,57 +13,19 @@ namespace ExpenseTracker.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public GastosController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public GastosController(ApplicationDbContext context) => _context = context;
 
         // GET: Gastos
-        public async Task<IActionResult> Index(string filtro = "total")
+        public async Task<IActionResult> Index()
         {
-            var gastosQuery = _context.Gastos.Include(g => g.Categoria).AsQueryable();
-            DateTime hoy = DateTime.Today;
-
-            switch (filtro.ToLower())
-            {
-                case "hoy":
-                case "diario":
-                    gastosQuery = gastosQuery.Where(g => g.Fecha.Date == hoy);
-                    break;
-
-                case "semanal":
-                    DateTime inicioSemana = hoy.AddDays(-(int)hoy.DayOfWeek + 1);
-                    DateTime finSemana = inicioSemana.AddDays(6);
-                    gastosQuery = gastosQuery.Where(g => g.Fecha >= inicioSemana && g.Fecha <= finSemana);
-                    break;
-
-                case "mensual":
-                    gastosQuery = gastosQuery.Where(g => g.Fecha.Month == hoy.Month && g.Fecha.Year == hoy.Year);
-                    break;
-
-                case "total":
-                default:
-                    break;
-            }
-
-            var gastos = await gastosQuery.OrderByDescending(g => g.Fecha).ToListAsync();
-            ViewBag.Filtro = filtro;
-            return View(gastos);
-        }
-
-        // GET: Gastos/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var gasto = await _context.Gastos
+            var gastos = await _context.Gastos
                 .Include(g => g.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .OrderByDescending(g => g.Fecha)
+                .ToListAsync();
 
-            if (gasto == null) return NotFound();
-
-            return View(gasto);
+            return View(gastos); // Debes tener Views/Gastos/Index.cshtml
         }
+
 
         // GET: Gastos/Create
         public async Task<IActionResult> Create()
@@ -79,7 +40,14 @@ namespace ExpenseTracker.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias.Where(c => !c.Eliminada), "Id", "Titulo");
+            ViewData["CategoriaId"] = _context.Categorias
+                .Where(c => !c.Eliminada)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Titulo
+                }).ToList();
+
             return View();
         }
 
@@ -93,18 +61,30 @@ namespace ExpenseTracker.Controllers
 
             if (!hayEntradaEsteMes)
             {
-                TempData["Error"] = "No puedes registrar un gasto porque no se han registrado entradas en el mes seleccionado.";
-                return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, "❌ No puedes registrar un gasto porque no hay entradas registradas en el mismo mes.");
+            }
+
+            if (gasto.CategoriaId == 0)
+            {
+                ModelState.AddModelError("CategoriaId", "La categoría es obligatoria");
             }
 
             if (ModelState.IsValid)
             {
                 _context.Add(gasto);
                 await _context.SaveChangesAsync();
+                TempData["Mensaje"] = "✅ Gasto registrado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias.Where(c => !c.Eliminada), "Id", "Titulo", gasto.CategoriaId);
+            ViewData["CategoriaId"] = _context.Categorias
+                .Where(c => !c.Eliminada)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Titulo
+                }).ToList();
+
             return View(gasto);
         }
 
@@ -146,6 +126,22 @@ namespace ExpenseTracker.Controllers
             return View(gasto);
         }
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var gasto = await _context.Gastos
+                .Include(g => g.Categoria) // MUY IMPORTANTE
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (gasto == null)
+                return NotFound();
+
+            return View(gasto);
+        }
+
+
         // GET: Gastos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -160,29 +156,33 @@ namespace ExpenseTracker.Controllers
             return View(gasto);
         }
 
-        // POST: Gastos/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        // Updated code to fix CS8602: Desreferencia de una referencia posiblemente NULL.
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var gasto = await _context.Gastos
                 .Include(g => g.Categoria)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (gasto == null) return NotFound();
+            if (gasto == null || gasto.Categoria == null) // Added null check for Categoria
+            {
+                return NotFound();
+            }
 
-            var categoriaNombre = gasto.Categoria.Titulo;
+            string categoriaNombre = gasto.Categoria.Titulo; // Safe access after null check
             var monto = gasto.Monto;
 
             _context.Gastos.Remove(gasto);
             await _context.SaveChangesAsync();
 
-            TempData["Mensaje"] = $"Se eliminó el gasto de {monto:C} de la categoría '{categoriaNombre}'. El total de gastos se ha ajustado automáticamente.";
+            TempData["Mensaje"] = $"Se eliminó el gasto de {monto:C} de la categoría '{categoriaNombre}'.";
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Reporte por categoría
+        // Updated code to fix CS8602: Desreferencia de una referencia posiblemente NULL.
         public async Task<IActionResult> ReportePorCategoria(string filtro = "total")
         {
             var gastosQuery = _context.Gastos.Include(g => g.Categoria).AsQueryable();
@@ -194,24 +194,19 @@ namespace ExpenseTracker.Controllers
                 case "diario":
                     gastosQuery = gastosQuery.Where(g => g.Fecha.Date == hoy);
                     break;
-
                 case "semanal":
                     DateTime inicioSemana = hoy.AddDays(-(int)hoy.DayOfWeek + 1);
                     DateTime finSemana = inicioSemana.AddDays(6);
                     gastosQuery = gastosQuery.Where(g => g.Fecha >= inicioSemana && g.Fecha <= finSemana);
                     break;
-
                 case "mensual":
                     gastosQuery = gastosQuery.Where(g => g.Fecha.Month == hoy.Month && g.Fecha.Year == hoy.Year);
-                    break;
-
-                case "total":
-                default:
                     break;
             }
 
             var datos = await gastosQuery
-                .GroupBy(g => g.Categoria.Titulo)
+                .Where(g => g.Categoria != null) // Added null check for Categoria
+                .GroupBy(g => g.Categoria!.Titulo) // Safe access using null-forgiving operator (!)
                 .Select(g => new
                 {
                     Categoria = g.Key,
@@ -226,9 +221,6 @@ namespace ExpenseTracker.Controllers
             return View();
         }
 
-        private bool GastoExists(int id)
-        {
-            return _context.Gastos.Any(e => e.Id == id);
-        }
+        private bool GastoExists(int id) => _context.Gastos.Any(e => e.Id == id);
     }
 }

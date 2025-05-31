@@ -4,12 +4,33 @@
     ViewData["Title"] = "Registrar Gasto";
 }
 
-<h2>Registrar Gasto</h2>
+<h2 class="mb-4">Registrar Gasto</h2>
+
+<!-- Mostrar mensaje de error global (TempData) -->
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<!-- Mostrar errores de ModelState -->
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
 
 <form asp-action="Create" method="post">
     <div class="form-group mb-3">
         <label asp-for="CategoriaId" class="form-label"></label>
-        <select asp-for="CategoriaId" asp-items="ViewBag.CategoriaId" class="form-select"></select>
+        <select asp-for="CategoriaId" asp-items="@(ViewData["CategoriaId"] as List<SelectListItem>)" class="form-select">
+            <option value="">Seleccione una categoría</option>
+        </select>
         <span asp-validation-for="CategoriaId" class="text-danger"></span>
     </div>
 

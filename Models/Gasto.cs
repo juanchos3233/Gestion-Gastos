@@ -11,7 +11,7 @@ namespace ExpenseTracker.Models
         public int CategoriaId { get; set; }
 
         [ForeignKey("CategoriaId")]
-        public required Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
 
         [Required(ErrorMessage = "El monto es obligatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a 0")]
