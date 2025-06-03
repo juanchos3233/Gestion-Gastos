@@ -1,7 +1,12 @@
 bin/
 obj/
-.vs/
 *.user
 *.suo
-*.dbmdl
-*.log
+*.vs
+.vscode/
+*.db
+.env
+.env.*
+appsettings.*.json
+ExpenseTracker.styles.css
+ExpenseTracker.csproj.user
