@@ -1,0 +1,49 @@
+﻿@page
+@model RegisterModel
+@{
+    Layout = "~/Areas/Identity/Pages/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Registrarse";
+}
+<div class="container-fluid vh-100 d-flex p-0">
+    <!-- Izquierda: formulario -->
+    <div class="col-lg-5 col-12 d-flex align-items-center justify-content-center bg-dark" style="min-height:100vh;">
+        <div class="w-100 px-4" style="max-width: 410px;">
+            <div class="text-center mb-4">
+                <img src="~/img/logotipologin.png" class="mb-2" alt="Logo" style="width: 80px;" />
+            </div>
+            <div class="card shadow p-4 border-0">
+                <h3 class="mb-4 fw-bold text-center">Crea tu cuenta</h3>
+                <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div class="mb-3">
+                        <input asp-for="Input.Email" class="form-control form-control-lg" placeholder="Correo electrónico" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <input asp-for="Input.Password" class="form-control form-control-lg" placeholder="Contraseña" type="password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg" placeholder="Confirmar contraseña" type="password" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Registrarse</button>
+                </form>
+                <div class="mt-3 text-center">
+                    <small>¿Ya tienes una cuenta? <a asp-page="./Login" class="link-info">Inicia sesión aquí</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Derecha: promo -->
+    <div class="col-lg-7 d-none d-lg-flex flex-column align-items-center justify-content-center position-relative" style="min-height:100vh;">
+        <div class="promo-text text-white px-5" style="max-width: 600px; text-align: left;">
+            <h1 class="display-3 fw-bold mb-4">La mejor forma de gestionar tus gastos</h1>
+            <p class="lead fs-4 mb-5">Administra tu dinero y toma el control de tus finanzas personales de forma simple y moderna.</p>
+            <img src="~/img/logotipologin.png" alt="Logo" style="max-width:180px; opacity:0.18; position:absolute; bottom:40px; right:70px;" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

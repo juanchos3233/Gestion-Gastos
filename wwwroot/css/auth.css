@@ -1,0 +1,177 @@
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #101f3c 60%, #222 100%);
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.bubbles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.22;
+    animation: float 18s infinite;
+    background: linear-gradient(135deg, #20b2aa 40%, #4290f5 100%);
+}
+
+    .bubble:nth-child(1) {
+        width: 240px;
+        height: 240px;
+        left: 10vw;
+        top: 10vh;
+        animation-delay: 0s;
+    }
+
+    .bubble:nth-child(2) {
+        width: 160px;
+        height: 160px;
+        right: 15vw;
+        top: 22vh;
+        animation-delay: 4s;
+    }
+
+    .bubble:nth-child(3) {
+        width: 120px;
+        height: 120px;
+        left: 50vw;
+        bottom: 8vh;
+        animation-delay: 8s;
+    }
+
+    .bubble:nth-child(4) {
+        width: 80px;
+        height: 80px;
+        right: 4vw;
+        bottom: 16vh;
+        animation-delay: 12s;
+    }
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-30px) scale(1.08);
+    }
+}
+
+.logo-login {
+    width: 150px;
+    margin: 32px auto 18px auto;
+    display: block;
+    z-index: 2;
+}
+
+.auth-main-container {
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-form-content {
+    max-width: 430px;
+    margin: 0 auto;
+    z-index: 3;
+}
+
+.fondo-logo-login {
+    max-width: 70%;
+    opacity: 0.13;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.fondo-register-promo {
+    min-height: 100%;
+    position: relative;
+}
+
+.promo-text {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    z-index: 2;
+    text-shadow: 0 2px 8px #1117;
+    width: 80%;
+    max-width: 520px;
+}
+
+.card {
+    border-radius: 22px;
+    box-shadow: 0 2px 30px #14132c2a, 0 1.5px 5px #0002;
+    background: #21243a;
+    border: none;
+}
+
+.form-control-lg, .form-control {
+    border-radius: 14px !important;
+    font-size: 1.13rem !important;
+    min-height: 46px;
+    background: #1b2032;
+    color: #fff;
+    border: 1px solid #233;
+    transition: box-shadow 0.2s, border 0.2s;
+}
+
+    .form-control:focus {
+        border-color: #20b2aa;
+        box-shadow: 0 0 0 2px #20b2aa50;
+        background: #202546;
+        color: #fff;
+    }
+
+.btn-lg, .btn {
+    border-radius: 14px;
+    font-size: 1.11rem;
+    padding: 0.8rem 1.2rem;
+    box-shadow: 0 2px 10px #12122612;
+}
+
+.promo-text h1 {
+    text-shadow: 0 3px 20px #1619402a, 0 1px 0px #0004;
+    line-height: 1.13;
+    font-weight: 700;
+    font-size: 2.8rem;
+}
+
+.promo-text p {
+    text-shadow: 0 1px 7px #0002;
+    font-size: 1.35rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 991px) {
+    .promo-text, .col-lg-7 img {
+        display: none !important;
+    }
+
+    .auth-main-container, .container-fluid {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .auth-form-content, .card {
+        max-width: 97vw !important;
+        margin: 22px auto;
+        box-shadow: 0 2px 8px #0003;
+    }
+}
